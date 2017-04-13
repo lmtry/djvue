@@ -8,6 +8,7 @@
 * Vue
 * Fetch API
 * rest framework
+
 DEMO如下
 ![demo](https://github.com/lmtry/djvue/blob/master/Demo/demo.png)
 Models 数据模型
