@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>get/post测试</title>
+	
+</head>
+
+<style>
+	span {
+		color: orange;
+	}
+	strong {
+		color: blue;		
+	}
+</style>
+
+<body>
+	
+	<div id="app">
+		{% verbatim %}
+    		{{ getinfo }}
+		{% endverbatim %}
+		<label for="title">title</label>
+		<input type="text" id="title" placeholder="请输入title" v-model="msg.title">
+		</br>
+		<label for="code">code</label>
+		<input type="text" id="code" placeholder="请输入code" v-model="msg.code">
+		</br>
+		<label for="language">language</label>
+		<input type="text" id="language" placeholder="请输入language" v-model="msg.language">
+		<br>
+		<button onclick="app.postinfo"> post </button>
+		<ul>
+			<template v-for="item in list">
+				<li>
+					<span >{% verbatim %} {{ item }} {% endverbatim %}  | </span>
+				</li>
+				<!-- 假设我们要在每一个循环后面换行或加横线，就把它们打包放在template元素中 -->
+				<hr>
+				<br>
+			</template>
+		</ul>
+		
+		<!-- {% verbatim %}
+    		{{ postinfo }}
+		{% endverbatim %} -->
+	</div>
+
+	<script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
+	<script type="text/javascript">
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				list: [],
+				msg: {
+					title: '',
+					code: '',
+					language: '',
+				}
+			},
+			computed: {
+				getinfo: function() {
+					var URL = "http://127.0.0.1:8000/snippets/";
+					var req = new Request(URL, {method: 'GET', cache: 'reload', mode: "same-origin"});  
+		    		fetch(req).then(function(response) {
+		        		return response.json();  
+		    		}).then(function(result) {
+		    			console.log(result);
+		    			app.list = result;
+		    		});  
+				},
+				postinfo: function() {
+					var URL = "http://127.0.0.1:8000/snippets/";
+					console.log(app.msg);
+					fetch(URL, {
+					    method: "POST",
+					    headers: {
+					        'Content-Type': 'application/json'
+					    },
+					    body: JSON.stringify(app.msg)
+					}).then(function(response) {
+		        		return response.json();  
+		    		}).then(function(result) {
+		    			console.log(result);
+		    		});  
+				}
+			}
+		})
+	</script>
+</body>
+</html>
